@@ -30,6 +30,7 @@
 4. Создать Service, который обеспечит доступ до реплик приложений из п.1.
 5. Создать отдельный Pod с приложением multitool и убедиться с помощью `curl`, что из пода есть доступ до приложений из п.1.
 
+
 Создаем deployment.yaml
 
 root@DebianNew:~/.kube# nano deployment.yaml 
@@ -66,7 +67,7 @@ root@DebianNew:~/.kube# kubectl apply -f deployment.yaml
 
 И ловим ошибку
 
-![alt text](https://github.com/MaratKN/kuber-homeworks-03/blob/main/1.png)
+![alt text](https://github.com/MaratKN/kuber-homeworks-03/blob/main/1_v2.png)
 
 Видим, что порт 80 уже занят
 
@@ -198,6 +199,75 @@ root@DebianNew:~/.kube# kubectl exec multitool-app -- curl 10.1.83.203:80
 2. Убедиться, что nginx не стартует. В качестве Init-контейнера взять busybox.
 3. Создать и запустить Service. Убедиться, что Init запустился.
 4. Продемонстрировать состояние пода до и после запуска сервиса.
+
+
+Создадим deployment-init.yaml
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nginx-app
+  name: nginx-app
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+      initContainers:
+      - name: init-nginx-svc
+        image: busybox
+        command: ['sh', '-c', 'until nslookup nginx-svc.default.svc.cluster.local; do echo waiting for nginx-svc; sleep 5; done;']
+```
+
+root@DebianNew:~/.kube# nano deployment-init.yaml
+
+root@DebianNew:~/.kube# kubectl apply -f deployment-init.yaml 
+
+deployment.apps/nginx-app created
+
+root@DebianNew:~/.kube# kubectl get pods -o wide
+
+Nginx не стартует
+
+![alt text](https://github.com/MaratKN/kuber-homeworks-03/blob/main/8.png)
+
+Создадим Service nginx-svc.yaml и убедимся, что init запустился
+
+root@DebianNew:~/.kube# nano nginx-svc.yaml
+
+```
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-svc
+spec:
+  selector:
+    app: nginx
+  ports:
+  - name: http-port
+    port: 80
+    protocol: TCP
+    targetPort: 80
+```
+
+root@DebianNew:~/.kube# kubectl apply -f nginx-svc.yaml 
+
+root@DebianNew:~/.kube# kubectl get pods -o wide
+
+![alt text](https://github.com/MaratKN/kuber-homeworks-03/blob/main/9.png)
 
 ------
 
