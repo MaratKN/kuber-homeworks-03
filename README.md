@@ -128,7 +128,7 @@ root@DebianNew:~/.kube# kubectl get pods -A
 
 ![alt text](https://github.com/MaratKN/kuber-homeworks-03/blob/main/3.png)
 
-Создаем Service, который обеспечит доступ до реплик приложений из предудыщих пунктов
+Создаем Service, который обеспечит доступ до реплик приложений из предыдущих пунктов
 
 root@DebianNew:~/.kube# nano deployment-svc.yaml
 
@@ -158,7 +158,7 @@ root@DebianNew:~/.kube# kubectl get svc -o wide
 
 ![alt text](https://github.com/MaratKN/kuber-homeworks-03/blob/main/4.png)
 
-Создаём отдельный Pod с приложением multitool и убеждаемся с помощью curl, что из пода есть доступ до приложений из предудыщих пунктов
+Создаём отдельный Pod с приложением multitool и убеждаемся с помощью curl, что из пода есть доступ до приложений из предыдущих пунктов
 
 root@DebianNew:~/.kube# nano multitool-app.yaml
 
