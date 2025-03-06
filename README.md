@@ -185,8 +185,10 @@ root@DebianNew:~/.kube# kubectl apply -f multitool-app.yaml
 
 ![alt text](https://github.com/MaratKN/kuber-homeworks-03/blob/main/5.png)
 
+```
 root@DebianNew:~/.kube# kubectl exec multitool-app -- curl 10.1.83.204:80 
 root@DebianNew:~/.kube# kubectl exec multitool-app -- curl 10.1.83.203:80 
+```
 
 ![alt text](https://github.com/MaratKN/kuber-homeworks-03/blob/main/6.png)
 ![alt text](https://github.com/MaratKN/kuber-homeworks-03/blob/main/7.png)
